@@ -18,7 +18,7 @@ export class EmailController {
     public async sendEmail(@Body() req: EmailRequestDto) {
         const sender = await Sender.findOneOrFail(req.senderId, {relations: ['domain']});
         const template = await Template.findOneOrFail(req.templateId);
-        const email = new EmailRequest();
+        let email = new EmailRequest();
         email.body = this.emails.load(this.emails.compile(template.body), req.context);
         email.priority = req.priority;
         email.subject = req.subject;
@@ -26,10 +26,8 @@ export class EmailController {
         email.cc = req.cc;
         email.bcc = req.bcc;
         email.sender = sender;
-        await email.save();
+        email = await email.save();
 
-        await this.emails.send(email);
-
-        return email;
+        return await EmailRequest.findOneOrFail(email.id);
     }
 }

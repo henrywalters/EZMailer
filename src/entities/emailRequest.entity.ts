@@ -1,20 +1,19 @@
-import { IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, IsUUID } from "class-validator";
+import { IsIn, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, IsUUID } from "class-validator";
 import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Sender } from "./sender.entity";
 import { Template } from "./template.entity";
 
 export enum EmailStatus {
-    Pending,
-    Sent,
-    Rejected,
+    Pending = 'pending',
+    Sent = 'sent',
+    Rejected = 'rejected',
 };
 
 export enum EmailPriority {
-    Low,
-    Medium,
-    High,
+    Low = 'low',
+    Normal = 'normal',
+    High = 'high',
 }
-
 export class EmailRequestDto {
     @IsUUID()
     public senderId: string;
@@ -28,9 +27,9 @@ export class EmailRequestDto {
     @IsObject()
     public context: string;
 
-    @IsNumber()
-    @IsOptional()
-    public priority: number = EmailPriority.Low;
+    @IsString()
+    @IsIn([EmailPriority.Low, EmailPriority.Normal, EmailPriority.High])
+    public priority: EmailPriority = EmailPriority.Low;
 
     @IsString()
     public to: string;
