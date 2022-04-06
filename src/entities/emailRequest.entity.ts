@@ -25,7 +25,8 @@ export class EmailRequestDto {
     public templateId: string;
 
     @IsObject()
-    public context: string;
+    @IsOptional()
+    public context?: string;
 
     @IsString()
     @IsIn([EmailPriority.Low, EmailPriority.Normal, EmailPriority.High])
@@ -36,11 +37,11 @@ export class EmailRequestDto {
 
     @IsString()
     @IsOptional()
-    public cc: string;
+    public cc?: string;
 
     @IsString()
     @IsOptional()
-    public bcc: string;
+    public bcc?: string;
 
 }
 
