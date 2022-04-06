@@ -24,7 +24,11 @@ export class DomainController {
     public async getEmails(@Param("id") id: string) {
         return await EmailRequest.find({
             where: {
-                domain: {id}
+                sender: {
+                    domain: {
+                        id
+                    }
+                }
             },
             relations: [
                 'sender',
