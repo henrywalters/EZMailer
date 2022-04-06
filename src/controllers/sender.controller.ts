@@ -1,17 +1,31 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { Domain } from "src/entities/domain.entity";
+import { EmailRequest } from "src/entities/emailRequest.entity";
 import { Sender, SenderDto } from "src/entities/sender.entity";
 
 @Controller("senders")
 export class SenderController {
     @Get()
     public async getSenders() {
-        return await Sender.find();
+        return await Sender.find({relations: ['domain']});
     }
 
     @Get(":id")
     public async getSender(@Param("id") id: string) {
-        return await Sender.findOneOrFail(id);
+        return await Sender.findOneOrFail(id, {relations: ['domain']});
+    }
+
+    @Get(":id/emails")
+    public async getEmails(@Param("id") id: string) {
+        return await EmailRequest.find({
+            where: {
+                sender: {id}
+            },
+            relations: [
+                'sender',
+                'sender.domain',
+            ]
+        });
     }
 
     @Post()
