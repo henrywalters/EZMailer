@@ -7,6 +7,7 @@ import { DomainController } from './controllers/domain.controller';
 import { EmailController } from './controllers/email.controller';
 import { SenderController } from './controllers/sender.controller';
 import { TemplateController } from './controllers/template.controller';
+import { TrackingController } from './controllers/tracking.controller';
 import { EmailService } from './services/email.service';
 
 @Module({
@@ -22,6 +23,7 @@ import { EmailService } from './services/email.service';
     SenderController,
     TemplateController,
     EmailController,
+    TrackingController,
   ],
   providers: [
     EmailService,
