@@ -3,7 +3,9 @@
 LOG_FILE=server.log
 ERROR_FILE=error.log
 
-echo "Building EZMailer Backend"
+PORT=$(cat .env | grep APP_PORT | awk '{split($0,a,"="); print(a[2])}')
+
+echo "Building EZMailer Backend on port $PORT"
 
 npm install
 npm run build
@@ -11,7 +13,7 @@ npm run build
 echo "Running migrations"
 npm run typeorm -- migration:run
 
-usage=$(lsof -n -i -P | grep LISTEN | grep :4300 | awk '{print $2}')
+usage=$(lsof -n -i -P | grep LISTEN | grep :$PORT | awk '{print $2}')
 
 if [[ "$usage" != "" ]]; then
   echo "Killing previous instance pid: $usage"

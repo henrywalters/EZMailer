@@ -1,19 +1,23 @@
-import { Body, Controller, Delete, Get, HttpException, Param, Post, Put, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpException, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { Template, TemplateDto } from "src/entities/template.entity";
+import { AuthGuard } from "src/services/auth.guard";
 
 @Controller("templates")
 export class TemplateController {
     @Get()
+    @UseGuards(AuthGuard)
     public async getTemplates() {
         return await Template.find();
     }   
 
     @Get(":id")
+    @UseGuards(AuthGuard)
     public async getTemplate(@Param("id") id: string) {
         return await Template.findOneOrFail(id);
     }
 
     @Get(":name")
+    @UseGuards(AuthGuard)
     public async getVersionedTemplate(@Param("name") name: string, @Query("v") version: number) {
         console.log(name, version);
         return await Template.findOneOrFail({
@@ -25,6 +29,7 @@ export class TemplateController {
     }
 
     @Post()
+    @UseGuards(AuthGuard)
     public async createTemplate(@Body() req: TemplateDto) {
 
         if (await Template.findOne({where: {name: req.name}})) {
@@ -39,6 +44,7 @@ export class TemplateController {
     }
 
     @Post(":id/duplicate")
+    @UseGuards(AuthGuard)
     public async duplicateTemplate(@Param("id") id: string) {
         const template = await Template.findOneOrFail(id);
         const templateCopy = new Template();
@@ -50,6 +56,7 @@ export class TemplateController {
     }
 
     @Put(":id")
+    @UseGuards(AuthGuard)
     public async updateTemplate(@Param("id") id: string, @Body() req: TemplateDto) {
         const template = await Template.findOneOrFail(id);
         template.body = req.body;
@@ -58,6 +65,7 @@ export class TemplateController {
     }
 
     @Delete(":id")
+    @UseGuards(AuthGuard)
     public async removeTemplate(@Param("id") id: string) {
         const template = await Template.findOneOrFail(id);
         await template.remove();
