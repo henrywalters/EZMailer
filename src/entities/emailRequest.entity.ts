@@ -82,4 +82,10 @@ export class EmailRequest extends BaseEntity {
 
     @Column({type: "int", default: 0})
     public attempts: number;
+
+    @Column({type: "datetime", nullable: true})
+    public firstOpenedAt?: Date;
+
+    @Column({type: "datetime", nullable: true})
+    public lastOpenedAt?: Date;
 }
