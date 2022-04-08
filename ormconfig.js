@@ -22,7 +22,7 @@ const Config = [
         password: process.env.DB_PASS,
         database: process.env.DB_NAME,
         port: process.env.DB_PORT,
-        logging: true,
+        logging: false,
         synchronize: false,
         entities: [ "dist/entities/**/*.entity{.ts,.js}" ],
         migrationsTableName: "migrations",
