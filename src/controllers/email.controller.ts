@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Req, UseGuards } from "@nestjs/common";
 import { EmailRequest, EmailRequestDto } from "src/entities/emailRequest.entity";
 import { Sender } from "src/entities/sender.entity";
 import { Template } from "src/entities/template.entity";
@@ -14,6 +14,17 @@ export class EmailController {
     @UseGuards(AuthGuard)
     public async getEmails() {
         return await EmailRequest.find();
+    }
+
+    @Get(":id")
+    @UseGuards(AuthGuard)
+    public async getEmail(@Param("id") id: string) {
+        return await EmailRequest.findOne({
+            where: {
+                id,
+            },
+            relations: ['sender']
+        })
     }
 
     @Post()

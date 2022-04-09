@@ -1,14 +1,19 @@
+import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
 import { Cron, Interval } from "@nestjs/schedule";
 import Handlebars from "handlebars";
 import { getPriority } from "os";
 import { EmailRequest, EmailStatus } from "src/entities/emailRequest.entity";
+import { Sender } from "src/entities/sender.entity";
+import { WebHook, WebHookType } from "src/entities/webhook.entity";
 const nodemailer = require('nodemailer');
 
 const MAX_ATTEMPTS = 3;
 
 @Injectable()
 export class EmailService {
+
+    constructor(private readonly http: HttpService) {}
 
     public buildEmailString(name: string, email: string) {
         return `"${name}" <${email}>`;
@@ -66,6 +71,33 @@ export class EmailService {
 
         const info = await transporter.sendMail(transportReq);
 
+        await this.processWebHooks(WebHookType.EmailSent, req)
+
         // TODO: add some metric whether this actually went trough or not
+    }
+
+    public async processWebHooks(type: WebHookType, email: EmailRequest) {
+        const webhooks = await WebHook.find({
+            where: {
+                type,
+                active: true
+            }
+        });
+
+        for (const webhook of webhooks) {
+            if (webhook.domain && webhook.domain.id !== email.sender.domain.id) {
+                continue;
+            }
+
+            if (webhook.sender && webhook.sender.id !== email.sender.id) {
+                continue;
+            }
+
+            await this.http.post(webhook.endpoint, {
+                timestamp: (new Date()).toISOString(),
+                type,
+                email,
+            });
+        }
     }
 }

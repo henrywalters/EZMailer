@@ -1,3 +1,4 @@
+import { HttpModule } from '@nestjs/axios';
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -8,6 +9,7 @@ import { EmailController } from './controllers/email.controller';
 import { SenderController } from './controllers/sender.controller';
 import { TemplateController } from './controllers/template.controller';
 import { TrackingController } from './controllers/tracking.controller';
+import { WebHookController } from './controllers/webhook.controller';
 import { EmailService } from './services/email.service';
 
 @Module({
@@ -17,6 +19,7 @@ import { EmailService } from './services/email.service';
       isGlobal: true,
     }),
     ScheduleModule.forRoot(),
+    HttpModule,
   ],
   controllers: [
     DomainController,
@@ -24,6 +27,7 @@ import { EmailService } from './services/email.service';
     TemplateController,
     EmailController,
     TrackingController,
+    WebHookController,
   ],
   providers: [
     EmailService,

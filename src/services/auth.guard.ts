@@ -18,13 +18,11 @@ export class AuthGuard implements CanActivate {
         const parsed = Buffer.from(authToken, 'base64').toString('ascii');
         const parts = parsed.split('.');
 
-        console.log(parts);
-
         if (parts.length !== 2) {
             die();
         }
 
-        const apiKey = await ApiKey.findOne({where:{name: parts[0]}});
+        const apiKey = await ApiKey.findOne({where:{name: parts[0], active: true}});
 
         if (!apiKey) {
             console.log("Key doesn't exist");

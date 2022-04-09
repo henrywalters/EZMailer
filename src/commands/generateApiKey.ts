@@ -18,7 +18,7 @@ export class GenerateApiKeyCommand implements CommandRunner {
             return void 0;
         }
 
-        if (!!(await ApiKey.findOne({where: {name: passedParams[0]}}))) {
+        if (!!(await ApiKey.findOne({where: {name: passedParams[0], active: true}}))) {
             console.log(ERROR_COLOR, "API Key with this name already exists");
             return void 0;
         }
