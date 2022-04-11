@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommandFactory } from 'nest-commander';
 import { getConnection } from 'typeorm';
-import { GenerateApiKeyCommand } from './commands/generateApiKey';
+import { ApiKeyCommand } from './commands/apiKey';
 
 @Module({
   imports: [
@@ -13,7 +13,7 @@ import { GenerateApiKeyCommand } from './commands/generateApiKey';
     }),
   ],
   providers: [
-    GenerateApiKeyCommand,
+    ApiKeyCommand,
   ]
 })
 export class ConsoleModule {
